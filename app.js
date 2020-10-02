@@ -10,13 +10,104 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-const questions = [
+const initQuestions = [
+    {
+        type: "list",
+        message: "What kind of employee would you like to add?",
+        name: "role",
+        choices: ["Manager", "Engineer", "Intern"]
+
+    },
     {
         type: "input",
-        message: "",
-        
+        message: "Name: ",
+        name: "name"
+    },
+    {
+        type: "input",
+        message: "ID: ",
+        name: "id"
+    },
+    {
+        type: "input",
+        message: "Email Address: ",
+        name: "email"
     }
-]
+];
+
+const ManagerQuestion = [
+    {
+        type: "input",
+        message: "Office Number: ",
+        name: "finalResponse"
+    }
+];
+
+const EngineerQuestion = [
+    {
+        type: "input",
+        message: "GitHub Username: ",
+        name: "finalResponse"
+    }
+];
+
+const InternQuestion = [
+    {
+        type: "input",
+        message: "School: ",
+        name: "finalResponse"
+    },
+
+];
+
+let more = true;
+
+function init () {
+    inquirer.prompt(initQuestions).then(response => {
+        let finalQuestion;
+        switch (response.role) {
+            case "Manager":
+                finalQuestion = ManagerQuestion;
+                break;
+            case "Engineer":
+                finalQuestion = EngineerQuestion;
+                break;
+            case "Intern":
+                finalQuestion = InternQuestion;
+                break;
+            default:
+                console.log("How'd you mess that up?")
+                break;
+        }
+        const role = response.role;
+        const name = response.name;
+        const id = response.id;
+        const email = response.email;
+        // console.log(response)
+        inquirer.prompt(finalQuestion).then(finalResponse => {
+            const final = finalResponse.finalResponse;
+            console.log(role, name, id, email, final)
+            // Generate Employee Object (List of objects?)
+            inquirer.prompt([
+                {
+                    type: "list",
+                    message: "Add another Employee?",
+                    name: "continue",
+                    choices: ["Yes", "No"]
+                }
+            ]).then(response => {
+                if (response.continue === "Yes") {
+                    init();
+                } else {
+                    console.log("All done!");
+                    // GeneratePage()
+                }
+            })
+        })
+    })
+}
+
+init();
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
