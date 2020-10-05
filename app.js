@@ -8,7 +8,10 @@ const fs = require("fs");
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
+const employeeArr = [];
+console.log(outputPath);
 const render = require("./lib/htmlRenderer");
+
 
 const initQuestions = [
     {
@@ -74,8 +77,7 @@ function init () {
                 finalQuestion = InternQuestion;
                 break;
             default:
-                console.log("How'd you mess that up?")
-                break;
+                throw new Error("Role undefined")
         }
         const role = response.role;
         const name = response.name;
@@ -84,8 +86,22 @@ function init () {
         // console.log(response)
         inquirer.prompt(finalQuestion).then(finalResponse => {
             const final = finalResponse.finalResponse;
-            console.log(role, name, id, email, final)
-            // Generate Employee Object (List of objects?)
+            let employee;
+            switch (role) {
+                case "Manager":
+                    employee = new Manager(name, id, email, final);
+                    break;
+                case "Engineer":
+                    employee = new Engineer(name, id, email, final);
+                    break;
+                case "Intern":
+                    employee = new Intern(name, id, email, final);
+                    break;
+                default:
+                    throw new Error("Role undefined");
+            }
+            employeeArr.push(employee);
+            console.log(employeeArr);
             inquirer.prompt([
                 {
                     type: "list",
@@ -98,6 +114,10 @@ function init () {
                     init();
                 } else {
                     console.log("All done!");
+                    const html = render(employeeArr);
+                    fs.writeFile(outputPath, html, "utf8", err => {
+                        if (err) throw err;
+                    })
                     // GeneratePage()
                 }
             })
