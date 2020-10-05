@@ -60,8 +60,6 @@ const InternQuestion = [
 
 ];
 
-let more = true;
-
 function init () {
     inquirer.prompt(initQuestions).then(response => {
         let finalQuestion;
