@@ -69,7 +69,7 @@ const InternQuestion = [
 ];
 
 // Initialize the program and start asking questions
-function init () {
+function init() {
     inquirer.prompt(initQuestions).then(response => {
         // Grab answers out of response
         const role = response.role;
@@ -78,42 +78,29 @@ function init () {
         const email = response.email;
         // Instatiate variable to be filled in the switch case
         let finalQuestion;
-        // Assign the final question based on type of employee
+        // Assign the final question and class based on type of employee
         switch (role) {
             case "Manager":
                 finalQuestion = ManagerQuestion;
-                employeeType = Manager 
+                employeeRole = Manager
                 break;
-                case "Engineer":
-                    finalQuestion = EngineerQuestion;
-                    employeeType = Engineer 
-                    break;
-                    case "Intern":
-                        finalQuestion = InternQuestion;
-                        employeeType = Intern 
+            case "Engineer":
+                finalQuestion = EngineerQuestion;
+                employeeRole = Engineer
+                break;
+            case "Intern":
+                finalQuestion = InternQuestion;
+                employeeRole = Intern
                 break;
             default:
                 throw new Error("Role undefined")
         }
         // Ask final question
-        inquirer.prompt(finalQuestion).then(finalResponse => {
-            const final = finalResponse.finalResponse;
-            // Instiate variable to be assigned in switch case
-            let employee;
-            // Create new employee objects
-            switch (role) {
-                case "Manager":
-                    employee = new Manager(name, id, email, final);
-                    break;
-                case "Engineer":
-                    employee = new Engineer(name, id, email, final);
-                    break;
-                case "Intern":
-                    employee = new Intern(name, id, email, final);
-                    break;
-                default:
-                    throw new Error("Role undefined");
-            }
+        inquirer.prompt(finalQuestion).then(response => {
+            // Grab response to final question
+            const final = response.finalResponse;
+            // Create new emloyee object based on role assigned in switch case above
+            const employee = new employeeRole(name, id, email, final);
             // Add employee object to the employee array
             employeeArr.push(employee);
             // Ask if the user wants to continue adding employees
