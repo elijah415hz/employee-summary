@@ -5,8 +5,6 @@ Employee Summary Generator is a simple CLI that generates a static webpage that 
 ## Table of Contents
 * [Installation](#Installation)
 * [Usage](#Usage)
-* [License](#License)
-* [Contributing](#Contributing)
 * [Tests](#Tests)
 * [Questions](#Questions)
 ## Installation
@@ -15,12 +13,7 @@ To install necessary dependencies, run the following command:
 npm install
 ``` 
 ## Usage
-Employee Summary Generator is built to be run with node.js. After installing dependencies, initiate the program with node app.js. After answering all the prompts and entering all of your employee information, the output will be saved in the output folder. Navigate there and open team.html to see what you've created.
-## License
-[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/) 
-
-This application is covered by the MIT license.
-## Contributing
+Employee Summary Generator is built to be run with node.js. After installing dependencies, initiate the program with `node app.js`. After answering all the prompts and entering all of your employee information, the output will be saved in the output folder. Navigate there and open team.html to see what you've created.
 
 ## Tests
 ```
@@ -29,4 +22,4 @@ npm test
 ## Questions
 Find all of my repos at elijah415hz. 
 
-Please email me at elijahblaisdell@gmail.com with any questions.
+Email me at elijahblaisdell@gmail.com with any questions.
