@@ -1,18 +1,20 @@
+// Import class files and required packages
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
+const render = require("./lib/htmlRenderer");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 
+// Assign absolute path and file name for saving created team.html
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
+// Instatiate array to hold objects generated below
 const employeeArr = [];
-console.log(outputPath);
-const render = require("./lib/htmlRenderer");
 
-
+// Inquirer questions used for all classes
 const initQuestions = [
     {
         type: "list",
@@ -38,6 +40,7 @@ const initQuestions = [
     }
 ];
 
+// Question asked for managers
 const ManagerQuestion = [
     {
         type: "input",
@@ -46,6 +49,7 @@ const ManagerQuestion = [
     }
 ];
 
+// Question asked for engineers
 const EngineerQuestion = [
     {
         type: "input",
@@ -54,6 +58,7 @@ const EngineerQuestion = [
     }
 ];
 
+// Question asked for interns
 const InternQuestion = [
     {
         type: "input",
@@ -63,30 +68,39 @@ const InternQuestion = [
 
 ];
 
+// Initialize the program and start asking questions
 function init () {
     inquirer.prompt(initQuestions).then(response => {
-        let finalQuestion;
-        switch (response.role) {
-            case "Manager":
-                finalQuestion = ManagerQuestion;
-                break;
-            case "Engineer":
-                finalQuestion = EngineerQuestion;
-                break;
-            case "Intern":
-                finalQuestion = InternQuestion;
-                break;
-            default:
-                throw new Error("Role undefined")
-        }
+        // Grab answers out of response
         const role = response.role;
         const name = response.name;
         const id = response.id;
         const email = response.email;
-        // console.log(response)
+        // Instatiate variable to be filled in the switch case
+        let finalQuestion;
+        // Assign the final question based on type of employee
+        switch (role) {
+            case "Manager":
+                finalQuestion = ManagerQuestion;
+                employeeType = Manager 
+                break;
+                case "Engineer":
+                    finalQuestion = EngineerQuestion;
+                    employeeType = Engineer 
+                    break;
+                    case "Intern":
+                        finalQuestion = InternQuestion;
+                        employeeType = Intern 
+                break;
+            default:
+                throw new Error("Role undefined")
+        }
+        // Ask final question
         inquirer.prompt(finalQuestion).then(finalResponse => {
             const final = finalResponse.finalResponse;
+            // Instiate variable to be assigned in switch case
             let employee;
+            // Create new employee objects
             switch (role) {
                 case "Manager":
                     employee = new Manager(name, id, email, final);
@@ -100,8 +114,9 @@ function init () {
                 default:
                     throw new Error("Role undefined");
             }
+            // Add employee object to the employee array
             employeeArr.push(employee);
-            console.log(employeeArr);
+            // Ask if the user wants to continue adding employees
             inquirer.prompt([
                 {
                     type: "list",
@@ -111,41 +126,20 @@ function init () {
                 }
             ]).then(response => {
                 if (response.continue === "Yes") {
+                    // Call this function again and start asking questions
                     init();
                 } else {
-                    console.log("All done!");
+                    // Use render function in htmlRenderer.js to render an html string
                     const html = render(employeeArr);
+                    // Save html string to a file
                     fs.writeFile(outputPath, html, "utf8", err => {
                         if (err) throw err;
                     })
-                    // GeneratePage()
                 }
             })
         })
     })
 }
 
+// Call init() to get the party started
 init();
-
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
-
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
