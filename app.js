@@ -76,6 +76,10 @@ function init() {
         const name = response.name;
         const id = response.id;
         const email = response.email;
+        // Validate responses
+        if (!isNumber(id)) throw new Error("Invalid ID");
+        if (isNumber(name)) throw new Error("Invalid Name");
+        if (!isEmail(email)) throw new Error("Invalid Email")
         // Instatiate variable to be filled in the switch case
         let finalQuestion;
         // Assign the final question and class based on type of employee
@@ -123,10 +127,40 @@ function init() {
                         if (err) throw err;
                     })
                 }
-            })
+            }).catch(err => console.log(err.message))
+        }).catch(err => {
+            console.log("==========================")
+            console.log(err.message)
+            console.log("Please re-enter employee");
+            console.log("==========================")
+            setTimeout(() => init(), 500)
         })
+    }).catch(err => {
+        console.log("==========================")
+        console.log(err.message);
+        console.log("Please re-enter employee");
+        console.log("==========================")
+        setTimeout(() => init(), 500)
     })
+}
+
+const isNumber = function(num) {
+    if (parseInt(num)) {
+        return true;
+    } else {
+        return false
+    }
+}
+
+const isEmail = email => {
+    if (/@/.test(email)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 // Call init() to get the party started
 init();
+
+module.exports = {isNumber: isNumber};
